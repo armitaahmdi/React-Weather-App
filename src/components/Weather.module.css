@@ -1,0 +1,18 @@
+.container input{
+    border: none;
+    border-bottom: #000 1px solid;
+    outline: none;
+    width: 15%;
+    height: 2rem;
+}
+
+.container button{
+    height: 2rem;
+    width: 7%;
+    border: none;
+    cursor: pointer;
+    border-radius: 1rem;
+    background-color: rgb(3, 35, 124);
+    color: #fff;
+    margin: 0 2%;
+}

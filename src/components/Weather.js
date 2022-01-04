@@ -1,40 +1,51 @@
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import Card from './Card';
+import axios from 'axios';
+import styles from './Weather.module.css'
 
 const Weather = () => {
 
-    const [apiData, setApiData] = useState({});
-    const [getLocation, setGetLocation] = useState('Tehran');
-    const [location, setLocation] = useState('Tehran');
+    const [apiData, setApiData] = useState();
+    const [getLocation, setGetLocation] = useState('');
+    const [location, setLocation] = useState();
+    const [error, setError] = useState(false);
 
     const apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${location}&APPID=0a74a553b430af7a54c4b853f35ff1e3&units=metric`
-    useEffect(() => {
-        axios.get(apiUrl)
-            .then(res => console.log(res))
-            .then((data) => setApiData(data));
-    }, [apiUrl])
 
-    // const submitHandler = () => {
-    //     setLocation(location)
-    // }
+    useEffect(() => {
+        if (location !== undefined) {
+            axios.get(apiUrl)
+                .then(res => {
+                    setApiData(res.data)
+                    setError(false)
+                })
+                .catch(e => setError(true))
+        }
+
+    }, [apiUrl, location])
 
     const submitHandler = () => {
         setLocation(getLocation);
     };
 
     return (
-        <div>
+        <div className={styles.container}>
             <h1>Weather App</h1>
             <input type='search'
-                // value={location}
-                // onChange={event => setLocation(event.target.value)}
+                placeholder='Search for a city'
                 value={getLocation}
                 onChange={event => setGetLocation(event.target.value)}
             />
             <button onClick={submitHandler}>Search</button>
+            {error && <p>Please enter a valid city</p>}
 
-            <h1>Result:</h1>
-            
+            {apiData && !error && <Card city={apiData.name}
+                country={apiData.sys.country}
+                temp={Math.round(apiData.main.temp)}
+                description={apiData.weather[0]['description']}
+            />
+            }
         </div>
     );
 };
